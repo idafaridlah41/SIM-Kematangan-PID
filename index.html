@@ -138,40 +138,51 @@
 
     <!-- GLOBAL TOP NAVBAR -->
     <header class="bg-stone-900 text-white sticky top-0 z-50 shadow-md no-print border-b border-amber-600/40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center font-black text-stone-950 text-xl shadow-inner">
-                    ED
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-0 sm:h-16 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center justify-between w-full sm:w-auto">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center font-black text-stone-950 text-lg sm:text-xl shadow-inner">
+                        ED
+                    </div>
+                    <div>
+                        <h1 class="text-sm sm:text-base font-extrabold tracking-wide leading-tight text-stone-100">SI-EDUGITAL SMP 2026</h1>
+                        <p class="text-[10px] sm:text-[11px] text-amber-400/90 font-medium">Direktorat SMP — KEMENDIKDASMEN | Dev by <span class="font-bold underline decoration-amber-500">IFS</span></p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-base font-extrabold tracking-wide leading-tight text-stone-100">SI-EDUGITAL SMP 2026</h1>
-                    <p class="text-[11px] text-amber-400/90 font-medium">Direktorat SMP — KEMENDIKDASMEN | Dev by <span class="font-bold underline decoration-amber-500">IFS</span></p>
+
+                <!-- SIMULASI PRESET UNTUK HP (MOBILE ONLY - XS) -->
+                <div class="flex xs:hidden sm:hidden items-center space-x-1 bg-stone-950 p-1 rounded-lg border border-amber-500/50 text-[11px] shrink-0 shadow-inner">
+                    <span class="text-amber-400 font-extrabold px-1 text-[10px]">Sim:</span>
+                    <button onclick="loadPreset(1)" class="px-2 py-1 bg-rose-600 active:bg-rose-700 text-white font-extrabold rounded shadow-sm border border-rose-400 transition" title="Simulasi Level 1">L1</button>
+                    <button onclick="loadPreset(2)" class="px-2 py-1 bg-amber-500 active:bg-amber-600 text-stone-950 font-extrabold rounded shadow-sm border border-amber-300 transition" title="Simulasi Level 2">L2</button>
+                    <button onclick="loadPreset(3)" class="px-2 py-1 bg-sky-500 active:bg-sky-600 text-stone-950 font-extrabold rounded shadow-sm border border-sky-300 transition" title="Simulasi Level 3">L3</button>
+                    <button onclick="loadPreset(4)" class="px-2 py-1 bg-emerald-500 active:bg-emerald-600 text-stone-950 font-extrabold rounded shadow-sm border border-emerald-300 transition" title="Simulasi Level 4">L4</button>
                 </div>
             </div>
 
             <!-- ACTION CONTROL BUTTONS -->
-            <div class="flex items-center space-x-2">
-                <!-- PRESETS -->
-                <div class="hidden xl:flex items-center space-x-1 bg-stone-800 p-1 rounded-lg border border-stone-700 text-xs">
-                    <span class="text-stone-400 px-2 text-[11px] font-semibold">Simulasi:</span>
-                    <button onclick="loadPreset(1)" class="px-2 py-1 bg-rose-950/80 hover:bg-rose-900 text-rose-300 rounded border border-rose-800 transition">Lvl 1</button>
-                    <button onclick="loadPreset(2)" class="px-2 py-1 bg-amber-950/80 hover:bg-amber-900 text-amber-300 rounded border border-amber-800 transition">Lvl 2</button>
-                    <button onclick="loadPreset(3)" class="px-2 py-1 bg-sky-950/80 hover:bg-sky-900 text-sky-300 rounded border border-sky-800 transition">Lvl 3</button>
-                    <button onclick="loadPreset(4)" class="px-2 py-1 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 rounded border border-emerald-800 transition">Lvl 4</button>
+            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-1.5 sm:space-x-2 overflow-x-auto pb-1 sm:pb-0">
+                <!-- PRESETS TABLET & DESKTOP (RESPONSIF TERLIHAT JELAS TANPA TERPOTONG) -->
+                <div class="flex items-center space-x-1 bg-stone-800 p-1 rounded-lg border border-stone-700 text-xs shrink-0">
+                    <span class="text-amber-400 px-1.5 sm:px-2 text-[10px] sm:text-[11px] font-bold">Simulasi:</span>
+                    <button onclick="loadPreset(1)" class="px-2 sm:px-2.5 py-1 bg-rose-600 hover:bg-rose-500 text-white rounded font-extrabold border border-rose-400 transition shadow-sm" title="Simulasi Level 1">Lvl 1</button>
+                    <button onclick="loadPreset(2)" class="px-2 sm:px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-stone-950 rounded font-extrabold border border-amber-300 transition shadow-sm" title="Simulasi Level 2">Lvl 2</button>
+                    <button onclick="loadPreset(3)" class="px-2 sm:px-2.5 py-1 bg-sky-500 hover:bg-sky-400 text-stone-950 rounded font-extrabold border border-sky-300 transition shadow-sm" title="Simulasi Level 3">Lvl 3</button>
+                    <button onclick="loadPreset(4)" class="px-2 sm:px-2.5 py-1 bg-emerald-500 hover:bg-emerald-400 text-stone-950 rounded font-extrabold border border-emerald-300 transition shadow-sm" title="Simulasi Level 4">Lvl 4</button>
                 </div>
 
                 <!-- STORAGE & EXPORT MENU -->
-                <button onclick="exportJSON()" class="bg-stone-800 hover:bg-stone-700 text-amber-400 border border-stone-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 transition shadow-sm" title="Simpan File Data (.json)">
-                    <span>💾</span> <span class="hidden sm:inline">Simpan JSON</span>
+                <button onclick="exportJSON()" class="bg-stone-800 hover:bg-stone-700 text-amber-400 border border-stone-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 transition shadow-sm shrink-0" title="Simpan File Data (.json)">
+                    <span>💾</span> <span class="hidden md:inline">Simpan JSON</span>
                 </button>
-                <label class="bg-stone-800 hover:bg-stone-700 text-amber-400 border border-stone-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 cursor-pointer transition shadow-sm" title="Muat File Data (.json)">
-                    <span>📂</span> <span class="hidden sm:inline">Buka JSON</span>
+                <label class="bg-stone-800 hover:bg-stone-700 text-amber-400 border border-stone-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 cursor-pointer transition shadow-sm shrink-0" title="Muat File Data (.json)">
+                    <span>📂</span> <span class="hidden md:inline">Buka JSON</span>
                     <input type="file" id="import-file" accept=".json" onchange="importJSON(event)" class="hidden">
                 </label>
-                <button onclick="exportWordDoc()" class="bg-blue-900 hover:bg-blue-800 text-blue-100 border border-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 transition shadow-sm" title="Ekspor ke Word (Compatible Multi-Device)">
-                    <span>📄</span> <span class="hidden sm:inline">Word (.doc)</span>
+                <button onclick="exportWordDoc()" class="bg-blue-900 hover:bg-blue-800 text-blue-100 border border-blue-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 transition shadow-sm shrink-0" title="Ekspor ke Word (Compatible Multi-Device)">
+                    <span>📄</span> <span class="hidden md:inline">Word (.doc)</span>
                 </button>
-                <button onclick="triggerPrintModal()" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3.5 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 transition shadow">
+                <button onclick="triggerPrintModal()" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 transition shadow shrink-0">
                     <span>🖨️</span> <span>Cetak / PDF</span>
                 </button>
             </div>
