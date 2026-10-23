@@ -138,82 +138,73 @@
 
     <!-- GLOBAL TOP NAVBAR -->
     <header class="bg-stone-900 text-white sticky top-0 z-50 shadow-md no-print border-b border-amber-600/40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-0 sm:h-16 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="flex items-center justify-between w-full sm:w-auto">
-                <div class="flex items-center space-x-3">
-                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center font-black text-stone-950 text-lg sm:text-xl shadow-inner">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-0 sm:h-16 flex flex-col md:flex-row items-center justify-between gap-2.5">
+            <div class="flex items-center justify-between w-full md:w-auto">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center font-black text-stone-950 text-base sm:text-xl shadow-inner shrink-0">
                         ED
                     </div>
                     <div>
-                        <h1 class="text-sm sm:text-base font-extrabold tracking-wide leading-tight text-stone-100">SI-EDUGITAL SMP 2026</h1>
-                        <p class="text-[10px] sm:text-[11px] text-amber-400/90 font-medium">Direktorat SMP — KEMENDIKDASMEN | Dev by <span class="font-bold underline decoration-amber-500">IFS</span></p>
+                        <h1 class="text-xs sm:text-base font-extrabold tracking-wide leading-tight text-stone-100">SI-EDUGITAL SMP 2026</h1>
+                        <p class="text-[9px] sm:text-[11px] text-amber-400/90 font-medium">Direktorat SMP — KEMENDIKDASMEN | Dev by <span class="font-bold underline decoration-amber-500">IFS</span></p>
                     </div>
-                </div>
-
-                <!-- SIMULASI PRESET UNTUK HP (MOBILE ONLY - XS) -->
-                <div class="flex xs:hidden sm:hidden items-center space-x-1 bg-stone-950 p-1 rounded-lg border border-amber-500/50 text-[11px] shrink-0 shadow-inner">
-                    <span class="text-amber-400 font-extrabold px-1 text-[10px]">Sim:</span>
-                    <button onclick="loadPreset(1)" class="px-2 py-1 bg-rose-600 active:bg-rose-700 text-white font-extrabold rounded shadow-sm border border-rose-400 transition" title="Simulasi Level 1">L1</button>
-                    <button onclick="loadPreset(2)" class="px-2 py-1 bg-amber-500 active:bg-amber-600 text-stone-950 font-extrabold rounded shadow-sm border border-amber-300 transition" title="Simulasi Level 2">L2</button>
-                    <button onclick="loadPreset(3)" class="px-2 py-1 bg-sky-500 active:bg-sky-600 text-stone-950 font-extrabold rounded shadow-sm border border-sky-300 transition" title="Simulasi Level 3">L3</button>
-                    <button onclick="loadPreset(4)" class="px-2 py-1 bg-emerald-500 active:bg-emerald-600 text-stone-950 font-extrabold rounded shadow-sm border border-emerald-300 transition" title="Simulasi Level 4">L4</button>
                 </div>
             </div>
 
             <!-- ACTION CONTROL BUTTONS -->
-            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-1.5 sm:space-x-2 overflow-x-auto pb-1 sm:pb-0">
-                <!-- PRESETS TABLET & DESKTOP (RESPONSIF TERLIHAT JELAS TANPA TERPOTONG) -->
-                <div class="flex items-center space-x-1 bg-stone-800 p-1 rounded-lg border border-stone-700 text-xs shrink-0">
-                    <span class="text-amber-400 px-1.5 sm:px-2 text-[10px] sm:text-[11px] font-bold">Simulasi:</span>
-                    <button onclick="loadPreset(1)" class="px-2 sm:px-2.5 py-1 bg-rose-600 hover:bg-rose-500 text-white rounded font-extrabold border border-rose-400 transition shadow-sm" title="Simulasi Level 1">Lvl 1</button>
-                    <button onclick="loadPreset(2)" class="px-2 sm:px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-stone-950 rounded font-extrabold border border-amber-300 transition shadow-sm" title="Simulasi Level 2">Lvl 2</button>
-                    <button onclick="loadPreset(3)" class="px-2 sm:px-2.5 py-1 bg-sky-500 hover:bg-sky-400 text-stone-950 rounded font-extrabold border border-sky-300 transition shadow-sm" title="Simulasi Level 3">Lvl 3</button>
-                    <button onclick="loadPreset(4)" class="px-2 sm:px-2.5 py-1 bg-emerald-500 hover:bg-emerald-400 text-stone-950 rounded font-extrabold border border-emerald-300 transition shadow-sm" title="Simulasi Level 4">Lvl 4</button>
+            <div class="flex items-center justify-start sm:justify-end w-full md:w-auto space-x-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+                <!-- PRESETS SIMULASI -->
+                <div class="flex items-center space-x-1 bg-stone-950/80 p-1 rounded-lg border border-stone-800 text-xs shrink-0">
+                    <span class="text-amber-400 px-1 text-[10px] sm:text-[11px] font-bold">Sim:</span>
+                    <button onclick="loadPreset(1)" class="px-2 py-1 bg-rose-600 hover:bg-rose-500 text-white rounded font-extrabold border border-rose-400 transition text-[10px] sm:text-xs shadow-sm" title="Simulasi Level 1">L1</button>
+                    <button onclick="loadPreset(2)" class="px-2 py-1 bg-amber-500 hover:bg-amber-400 text-stone-950 rounded font-extrabold border border-amber-300 transition text-[10px] sm:text-xs shadow-sm" title="Simulasi Level 2">L2</button>
+                    <button onclick="loadPreset(3)" class="px-2 py-1 bg-sky-500 hover:bg-sky-400 text-stone-950 rounded font-extrabold border border-sky-300 transition text-[10px] sm:text-xs shadow-sm" title="Simulasi Level 3">L3</button>
+                    <button onclick="loadPreset(4)" class="px-2 py-1 bg-emerald-500 hover:bg-emerald-400 text-stone-950 rounded font-extrabold border border-emerald-300 transition text-[10px] sm:text-xs shadow-sm" title="Simulasi Level 4">L4</button>
                 </div>
 
                 <!-- STORAGE & EXPORT MENU -->
-                <button onclick="exportJSON()" class="bg-stone-800 hover:bg-stone-700 text-amber-400 border border-stone-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 transition shadow-sm shrink-0" title="Simpan File Data (.json)">
-                    <span>💾</span> <span class="hidden md:inline">Simpan JSON</span>
+                <button onclick="exportJSON()" class="bg-stone-800 hover:bg-stone-700 text-amber-400 border border-stone-700 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 transition shadow-sm shrink-0" title="Simpan File Data (.json)">
+                    <span>💾</span> <span class="text-[11px]">Simpan JSON</span>
                 </button>
-                <label class="bg-stone-800 hover:bg-stone-700 text-amber-400 border border-stone-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 cursor-pointer transition shadow-sm shrink-0" title="Muat File Data (.json)">
-                    <span>📂</span> <span class="hidden md:inline">Buka JSON</span>
+                <label class="bg-stone-800 hover:bg-stone-700 text-amber-400 border border-stone-700 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 cursor-pointer transition shadow-sm shrink-0" title="Muat File Data (.json)">
+                    <span>📂</span> <span class="text-[11px]">Buka JSON</span>
                     <input type="file" id="import-file" accept=".json" onchange="importJSON(event)" class="hidden">
                 </label>
-                <button onclick="exportWordDoc()" class="bg-blue-900 hover:bg-blue-800 text-blue-100 border border-blue-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 transition shadow-sm shrink-0" title="Ekspor ke Word (Compatible Multi-Device)">
-                    <span>📄</span> <span class="hidden md:inline">Word (.doc)</span>
+                <button onclick="exportWordDoc()" class="bg-blue-900 hover:bg-blue-800 text-blue-100 border border-blue-700 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 transition shadow-sm shrink-0" title="Ekspor ke Word">
+                    <span>📄</span> <span class="text-[11px]">Word (.doc)</span>
                 </button>
-                <button onclick="triggerPrintModal()" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 transition shadow shrink-0">
-                    <span>🖨️</span> <span>Cetak / PDF</span>
+                <button onclick="triggerPrintModal()" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs flex items-center space-x-1 transition shadow shrink-0">
+                    <span>🖨️</span> <span class="text-[11px]">Cetak / PDF</span>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- BANNER HERO SUMMARY -->
-    <section class="bg-white border-b border-stone-200 py-5 px-4 sm:px-6 lg:px-8 no-print">
+    <section class="bg-white border-b border-stone-200 py-4 px-3 sm:px-6 lg:px-8 no-print">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
+            <div class="flex-1">
                 <div class="flex items-center space-x-2 mb-1">
                     <span class="bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">TA 2026</span>
                     <span class="text-xs text-stone-500 font-medium">Direktorat Sekolah Menengah Pertama</span>
                 </div>
-                <h2 class="text-xl sm:text-2xl font-extrabold text-stone-900">Sistem Evaluasi Digitalisasi Pembelajaran (SI-EDUGITAL)</h2>
-                <p class="text-xs sm:text-sm text-stone-600 mt-0.5 max-w-3xl">
-                    Instrumen evaluasi standar untuk menilai tingkat kesiapan dan pemanfaatan Papan Interaktif Digital (PID), integrasi TPACK, kreasi media berbasis AI, serta pengimbasan *Cascade Training*.
+                <h2 class="text-lg sm:text-2xl font-extrabold text-stone-900 leading-tight">Sistem Evaluasi Digitalisasi Pembelajaran (SI-EDUGITAL)</h2>
+                <p class="text-xs sm:text-sm text-stone-600 mt-1 max-w-3xl leading-relaxed">
+                    Instrumen evaluasi standar untuk menilai tingkat kesiapan dan pemanfaatan Papan Interaktif Digital (PID), integrasi TPACK, kreasi media berbasis AI, serta pengimbasan <em>Cascade Training</em>.
                 </p>
             </div>
 
             <!-- QUICK PROFILE SCORE SUMMARY CARD -->
-            <div class="bg-stone-900 text-white p-3.5 rounded-xl border border-stone-800 shadow-md flex items-center space-x-4 min-w-[280px]">
-                <div id="quick-badge" class="w-12 h-12 rounded-xl bg-amber-500 text-stone-950 flex items-center justify-center text-xl font-black shadow">
+            <div class="bg-stone-900 text-white p-3.5 rounded-xl border border-stone-800 shadow-md flex items-center space-x-3.5 min-w-[280px] shrink-0">
+                <div id="quick-badge" class="w-12 h-12 rounded-xl bg-amber-500 text-stone-950 flex items-center justify-center text-xl font-black shadow shrink-0">
                     -
                 </div>
-                <div class="flex-1">
-                    <div class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Tingkat Kesiapan Digital</div>
-                    <div id="quick-level-name" class="text-base font-extrabold text-white leading-snug">Belum Diasesmen</div>
-                    <div class="flex items-center justify-between mt-0.5">
-                        <span id="quick-score-text" class="text-xs text-stone-300 font-medium">Skor: 0 / 76</span>
-                        <span id="quick-percent-text" class="text-xs font-bold text-amber-400">0.0%</span>
+                <div class="flex-1 min-w-0">
+                    <div class="text-[9px] uppercase font-bold text-amber-400 tracking-wider">Tingkat Kesiapan Digital</div>
+                    <div id="quick-level-name" class="text-sm sm:text-base font-extrabold text-white truncate leading-snug">Belum Diasesmen</div>
+                    <div class="flex items-center justify-between mt-0.5 text-xs">
+                        <span id="quick-score-text" class="text-stone-300 font-medium">Skor: 0 / 76</span>
+                        <span id="quick-percent-text" class="font-bold text-amber-400 ml-2">0.0%</span>
                     </div>
                 </div>
             </div>
@@ -221,18 +212,18 @@
     </section>
 
     <!-- NAVIGATION TAB STICKY -->
-    <div class="bg-white border-b border-stone-200 sticky top-16 z-40 no-print shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 sm:space-x-2 overflow-x-auto">
-            <button onclick="switchTab('tab-asesmen')" id="btn-tab-asesmen" class="tab-btn py-3 px-4 text-xs font-bold border-b-2 border-amber-600 text-amber-700 flex items-center space-x-2 whitespace-nowrap">
+    <div class="bg-white border-b border-stone-200 sticky top-14 sm:top-16 z-40 no-print shadow-sm">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex space-x-1 sm:space-x-2 overflow-x-auto scrollbar-none">
+            <button onclick="switchTab('tab-asesmen')" id="btn-tab-asesmen" class="tab-btn py-2.5 px-3 text-xs font-bold border-b-2 border-amber-600 text-amber-700 flex items-center space-x-1.5 whitespace-nowrap">
                 <span>📝</span> <span>1. Form Asesmen (Tabel Rubrik)</span>
             </button>
-            <button onclick="switchTab('tab-dashboard')" id="btn-tab-dashboard" class="tab-btn py-3 px-4 text-xs font-bold border-b-2 border-transparent text-stone-600 hover:text-stone-900 flex items-center space-x-2 whitespace-nowrap">
+            <button onclick="switchTab('tab-dashboard')" id="btn-tab-dashboard" class="tab-btn py-2.5 px-3 text-xs font-bold border-b-2 border-transparent text-stone-600 hover:text-stone-900 flex items-center space-x-1.5 whitespace-nowrap">
                 <span>📊</span> <span>2. Dashboard & Analisis Grafik</span>
             </button>
-            <button onclick="switchTab('tab-rubrik')" id="btn-tab-rubrik" class="tab-btn py-3 px-4 text-xs font-bold border-b-2 border-transparent text-stone-600 hover:text-stone-900 flex items-center space-x-2 whitespace-nowrap">
+            <button onclick="switchTab('tab-rubrik')" id="btn-tab-rubrik" class="tab-btn py-2.5 px-3 text-xs font-bold border-b-2 border-transparent text-stone-600 hover:text-stone-900 flex items-center space-x-1.5 whitespace-nowrap">
                 <span>📚</span> <span>3. Acuan Rubrik & Modul</span>
             </button>
-            <button onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn py-3 px-4 text-xs font-bold border-b-2 border-transparent text-stone-600 hover:text-stone-900 flex items-center space-x-2 whitespace-nowrap">
+            <button onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn py-2.5 px-3 text-xs font-bold border-b-2 border-transparent text-stone-600 hover:text-stone-900 flex items-center space-x-1.5 whitespace-nowrap">
                 <span>📄</span> <span>4. Catatan Kualitatif & RTL</span>
             </button>
         </div>
