@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Asesmen Kematangan PID & Digitalisasi Pembelajaran 2026</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Inter / Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            800: '#92400e',
+                            900: '#78350f',
+                            950: '#451a03',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* BASE PRINT STYLES */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 10pt !important;
+                font-family: 'Plus Jakarta Sans', serif, sans-serif !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .page-break-inside-avoid {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            .page-break-before {
+                break-before: page !important;
+                page-break-before: always !important;
+            }
+            .shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl {
+                box-shadow: none !important;
+            }
+            .border, .border-b, .border-t, .border-l, .border-r {
+                border-color: #cbd5e1 !important;
+            }
+            .max-w-7xl, .max-w-4xl, .container {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            th, td {
+                padding: 6px 8px !important;
+            }
+        }
+
+        /* DYNAMIC PRINT MODE FOR EXECUTIVE SUMMARY ONLY */
+        body.print-mode-summary #tab-asesmen,
+        body.print-mode-summary #tab-rubrik {
+            display: none !important;
+        }
+
+        /* DYNAMIC PAGE ORIENTATION & PAPER RULES VIA CSS CLASS ON BODY */
+        body.print-portrait {
+            @page {
+                size: A4 portrait;
+                margin: 12mm 15mm 12mm 15mm;
+            }
+        }
+        
+        body.print-landscape {
+            @page {
+                size: A4 landscape;
+                margin: 10mm 12mm 10mm 12mm;
+            }
+        }
+
+        body.print-f4-portrait {
+            @page {
+                size: 215mm 330mm portrait;
+                margin: 12mm 15mm 12mm 15mm;
+            }
+        }
+
+        body.print-f4-landscape {
+            @page {
+                size: 330mm 215mm landscape;
+                margin: 10mm 12mm 10mm 12mm;
+            }
+        }
+
+        /* CUSTOM SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans antialiased min-h-screen flex flex-col print-portrait">
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 no-print pointer-events-none"></div>
+
+    <!-- GLOBAL TOP NAVBAR -->
+    <header class="bg-stone-900 text-white sticky top-0 z-50 shadow-md no-print border-b border-amber-600/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center font-black text-stone-950 text-xl shadow-inner">
+                    PID
+                </div>
+                <div>
+                    <h1 class="text-base font-extrabold tracking-wide leading-tight text-stone-100">SIM-KEMATANGAN PID & DIGITALISASI</h1>
+                    <p class="text-[11px] text-amber-400/90 font-medium">Direktorat SMP — KEMENDIKDASMEN | Dev by <span class="font-bold underline decoration-amber-500">IFS</span></p>
+                </div>
+            </div>
+
+            <!-- ACTION CONTROL BUTTONS -->
+            <div class="flex items-center space-x-2">
+                <!-- PRESETS -->
+                <div class="hidden xl:flex items-center space-x-1 bg-stone-800 p-1 rounded-lg border border-stone-700 text-xs">
+                    <span class="text-stone-400 px-2 text-[11px] font-semibold">Simulasi:</span>
+                    <button onclick="loadPreset(1)" class="px-2 py-1 bg-rose-950/80 hover:bg-rose-900 text-rose-300 rounded border border-rose-800 transition">Lvl 1</button>
+                    <button onclick="loadPreset(2)" class="px-2 py-1 bg-amber-950/80 hover:bg-amber-900 text-amber-300 rounded border border-amber-800 transition">Lvl 2</button>
+                    <button onclick="loadPreset(3)" class="px-2 py-1 bg-sky-950/80 hover:bg-sky-900 text-sky-300 rounded border border-sky-800 transition">Lvl 3</button>
+                    <button onclick="loadPreset(4)" class="px-2 py-1 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 rounded border border-emerald-800 transition">Lvl 4</button>
+                </div>
+
+                <!-- STORAGE & EXPORT MENU -->
+                <button onclick="exportJSON()" class="bg-stone-800 hover:bg-stone-700 text-amber-400 border border-stone-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 transition shadow-sm" title="Simpan File Data (.json)">
+                    <span>💾</span> <span class="hidden sm:inline">Simpan JSON</span>
+                </button>
+                <label class="bg-stone-800 hover:bg-stone-700 text-amber-400 border border-stone-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 cursor-pointer transition shadow-sm" title="Muat File Data (.json)">
+                    <span>📂</span> <span class="hidden sm:inline">Buka JSON</span>
+                    <input type="file" id="import-file" accept=".json" onchange="importJSON(event)" class="hidden">
+                </label>
+                <button onclick="exportWordDoc()" class="bg-blue-900 hover:bg-blue-800 text-blue-100 border border-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 transition shadow-sm" title="Ekspor ke Word (Compatible Multi-Device)">
+                    <span>📄</span> <span class="hidden sm:inline">Word (.doc)</span>
+                </button>
+                <button onclick="triggerPrintModal()" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3.5 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 transition shadow">
+                    <span>🖨️</span> <span>Cetak / PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- BANNER HERO SUMMARY -->
+    <section class="bg-white border-b border-stone-200 py-5 px-4 sm:px-6 lg:px-8 no-print">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <div class="flex items-center space-x-2 mb-1">
+                    <span class="bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">TA 2026</span>
+                    <span class="text-xs text-stone-500 font-medium">Instrumen Evaluasi Kematangan Papan Interaktif Digital & LMS PASTI</span>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-stone-900">Aplikasi Asesmen Kematangan PID & Digitalisasi</h2>
+                <p class="text-xs sm:text-sm text-stone-600 mt-0.5 max-w-3xl">
+                    Sistem evaluasi standar untuk menilai tata kelola BMN, pemeliharaan fisik/siber, integrasi TPACK, kreasi media berbasis AI, serta pengimbasan *Cascade Training*.
+                </p>
+            </div>
+
+            <!-- QUICK PROFILE SCORE SUMMARY CARD -->
+            <div class="bg-stone-900 text-white p-3.5 rounded-xl border border-stone-800 shadow-md flex items-center space-x-4 min-w-[280px]">
+                <div id="quick-badge" class="w-12 h-12 rounded-xl bg-amber-500 text-stone-950 flex items-center justify-center text-xl font-black shadow">
+                    -
+                </div>
+                <div class="flex-1">
+                    <div class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Status Kematangan</div>
+                    <div id="quick-level-name" class="text-base font-extrabold text-white leading-snug">Belum Diasesmen</div>
+                    <div class="flex items-center justify-between mt-0.5">
+                        <span id="quick-score-text" class="text-xs text-stone-300 font-medium">Skor: 0 / 76</span>
+                        <span id="quick-percent-text" class="text-xs font-bold text-amber-400">0.0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NAVIGATION TAB STICKY -->
+    <div class="bg-white border-b border-stone-200 sticky top-16 z-40 no-print shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 sm:space-x-2 overflow-x-auto">
+            <button onclick="switchTab('tab-asesmen')" id="btn-tab-asesmen" class="tab-btn py-3 px-4 text-xs font-bold border-b-2 border-amber-600 text-amber-700 flex items-center space-x-2 whitespace-nowrap">
+                <span>📝</span> <span>1. Form Asesmen (Tabel Rubrik)</span>
+            </button>
+            <button onclick="switchTab('tab-dashboard')" id="btn-tab-dashboard" class="tab-btn py-3 px-4 text-xs font-bold border-b-2 border-transparent text-stone-600 hover:text-stone-900 flex items-center space-x-2 whitespace-nowrap">
+                <span>📊</span> <span>2. Dashboard & Analisis Grafik</span>
+            </button>
+            <button onclick="switchTab('tab-rubrik')" id="btn-tab-rubrik" class="tab-btn py-3 px-4 text-xs font-bold border-b-2 border-transparent text-stone-600 hover:text-stone-900 flex items-center space-x-2 whitespace-nowrap">
+                <span>📚</span> <span>3. Acuan Rubrik & Modul</span>
+            </button>
+            <button onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn py-3 px-4 text-xs font-bold border-b-2 border-transparent text-stone-600 hover:text-stone-900 flex items-center space-x-2 whitespace-nowrap">
+                <span>📄</span> <span>4. Catatan Kualitatif & RTL</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- HEADER PRINT UNTUK CETAK/PDF -->
+        <div class="hidden print-only mb-6 border-b-2 border-stone-800 pb-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-bold uppercase tracking-wide text-stone-900">Laporan Hasil Asesmen Kematangan PID & Digitalisasi</h1>
+                    <p class="text-xs text-stone-600 font-semibold">Direktorat Sekolah Menengah Pertama — Kementerian Pendidikan Dasar dan Menengah (TA 2026)</p>
+                </div>
+                <div class="text-right text-xs">
+                    <div class="font-bold text-stone-800" id="print-date-stamp">Tanggal: -</div>
+                    <div class="text-stone-500">Pengembang Sistem: <span class="font-bold">IFS</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- IDENTITAS SCHOOL FORM (PROFILES) -->
+        <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-4 sm:p-5 mb-6 page-break-inside-avoid">
+            <h3 class="text-sm font-bold text-stone-800 uppercase tracking-wider mb-3 flex items-center space-x-2">
+                <span>🏫</span> <span>Identitas Satuan Pendidikan & Asesor</span>
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                <div>
+                    <label for="ident-sekolah" class="block text-stone-500 font-medium mb-1">Nama Sekolah / NPSN</label>
+                    <input type="text" id="ident-sekolah" oninput="saveIdentData()" placeholder="SMP Negeri 1 Digital / 20200001" class="w-full border border-stone-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:outline-none text-stone-800 font-semibold bg-stone-50/50">
+                </div>
+                <div>
+                    <label for="ident-wilayah" class="block text-stone-500 font-medium mb-1">Kabupaten/Kota & Provinsi</label>
+                    <input type="text" id="ident-wilayah" oninput="saveIdentData()" placeholder="Kab. Garut, Jawa Barat" class="w-full border border-stone-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:outline-none text-stone-800 font-semibold bg-stone-50/50">
+                </div>
+                <div>
+                    <label for="ident-kepsek" class="block text-stone-500 font-medium mb-1">Nama Kepala Sekolah</label>
+                    <input type="text" id="ident-kepsek" oninput="saveIdentData()" placeholder="Drs. H. Ahmad Dahlan, M.Pd." class="w-full border border-stone-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:outline-none text-stone-800 font-semibold bg-stone-50/50">
+                </div>
+                <div>
+                    <label for="ident-asesor" class="block text-stone-500 font-medium mb-1">Nama Tim Asesor</label>
+                    <input type="text" id="ident-asesor" oninput="saveIdentData()" placeholder="Tim Monitoring Direktorat / Pengawas" class="w-full border border-stone-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:outline-none text-stone-800 font-semibold bg-stone-50/50">
+                </div>
+                <div>
+                    <label for="ident-tanggal" class="block text-stone-500 font-medium mb-1">Tanggal Asesmen</label>
+                    <input type="date" id="ident-tanggal" onchange="saveIdentData()" class="w-full border border-stone-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:outline-none text-stone-800 font-semibold bg-stone-50/50">
+                </div>
+                <div>
+                    <label class="block text-stone-500 font-medium mb-1">Model Perangkat PID</label>
+                    <input type="text" value="Hisense 75WM61FE + LMS PASTI" disabled class="w-full border border-stone-200 bg-stone-100 rounded-md px-3 py-2 text-stone-600 font-bold">
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 1: FORM ASESMEN (TABLE CHECKLIST FORM) -->
+        <section id="tab-asesmen" class="tab-content space-y-6">
+            <div class="flex items-center justify-between no-print">
+                <p class="text-xs text-stone-600">
+                    Petunjuk: Pilih skor (1–4) pada setiap indikator di dalam tabel berdasarkan bukti fisik dan observasi nyata.
+                </p>
+                <button onclick="resetScoresConfirm()" class="text-xs text-rose-600 hover:text-rose-800 font-semibold underline">
+                    🔄 Reset Semua Skor
+                </button>
+            </div>
+
+            <div id="dimensions-container" class="space-y-6">
+                <!-- Dynamic tables injected here via JS -->
+            </div>
+        </section>
+
+        <!-- TAB 2: DASHBOARD & ANALISIS GRAFIK -->
+        <section id="tab-dashboard" class="tab-content hidden space-y-6">
+            <!-- SUMMARY CARDS GRID -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-xl border border-stone-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <div class="text-xs text-stone-500 font-medium">Total Skor Perolehan</div>
+                        <div id="card-total-score" class="text-2xl font-black text-stone-900 mt-1">0 / 76</div>
+                        <div class="text-[11px] text-stone-500">Maksimum Skor 76</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-lg">
+                        🎯
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-stone-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <div class="text-xs text-stone-500 font-medium">Persentase Kematangan</div>
+                        <div id="card-percent" class="text-2xl font-black text-amber-600 mt-1">0.0%</div>
+                        <div id="card-percent-status" class="text-[11px] font-semibold text-stone-600">Belum Ada Data</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg">
+                        📈
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-stone-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <div class="text-xs text-stone-500 font-medium">Tingkat Kematangan</div>
+                        <div id="card-level-title" class="text-lg font-black text-stone-900 mt-1">Level -</div>
+                        <div id="card-level-category" class="text-[11px] font-semibold text-stone-600">Kategori Belum Ditentukan</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-lg">
+                        🏆
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-stone-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <div class="text-xs text-stone-500 font-medium">Indikator Tuntas</div>
+                        <div id="card-completed-count" class="text-2xl font-black text-indigo-900 mt-1">0 / 19</div>
+                        <div class="text-[11px] text-stone-500">Skor 3 atau 4 (Standar Baik)</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-lg">
+                        ✅
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHARTS GRID -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- RADAR CHART -->
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm page-break-inside-avoid">
+                    <h3 class="text-sm font-bold text-stone-800 uppercase tracking-wider mb-2 flex items-center space-x-2">
+                        <span>🕸️</span> <span>Peta Keseimbangan Dimensi (Radar Chart)</span>
+                    </h3>
+                    <p class="text-xs text-stone-500 mb-4">Perbandingan capaian riil vs Target Minimum Nasional (Skor 3/Indikator).</p>
+                    <div class="relative h-64 sm:h-72 w-full flex items-center justify-center">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- BAR CHART -->
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm page-break-inside-avoid">
+                    <h3 class="text-sm font-bold text-stone-800 uppercase tracking-wider mb-2 flex items-center space-x-2">
+                        <span>📊</span> <span>Capaian Skor Per Dimensi (Bar Chart)</span>
+                    </h3>
+                    <p class="text-xs text-stone-500 mb-4">Perbandingan skor nyata yang diperoleh terhadap skor maksimum per dimensi.</p>
+                    <div class="relative h-64 sm:h-72 w-full flex items-center justify-center">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DETAIL CAPAIAN TABLE PER DIMENSI -->
+            <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-5 page-break-inside-avoid">
+                <h3 class="text-sm font-bold text-stone-800 uppercase tracking-wider mb-4">
+                    📋 Ringkasan Skor Per Dimensi & Evaluasi Prioritas
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-stone-100 border-b border-stone-300 text-stone-700 uppercase">
+                                <th class="p-2.5 font-bold">Dimensi Evaluasi</th>
+                                <th class="p-2.5 font-bold text-center">Jumlah Indikator</th>
+                                <th class="p-2.5 font-bold text-center">Skor Maks</th>
+                                <th class="p-2.5 font-bold text-center">Skor Ril</th>
+                                <th class="p-2.5 font-bold text-center">Persentase</th>
+                                <th class="p-2.5 font-bold text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-summary-body" class="divide-y divide-stone-200">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: ACUAN RUBRIK & MODUL -->
+        <section id="tab-rubrik" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-5 page-break-inside-avoid">
+                <h3 class="text-base font-bold text-stone-900 mb-2">Rubrik Model Kematangan Digital (Maturity Level Model)</h3>
+                <p class="text-xs text-stone-600 mb-4">Standardisasi kriteria penilaian berdasarkan regulasi Kemendikdasmen dan standar bimbingan teknis.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="border border-rose-200 bg-rose-50/50 p-4 rounded-lg">
+                        <span class="inline-block px-2 py-0.5 bg-rose-700 text-white font-bold text-xs rounded mb-2">Level 1: Dasar (0-45%)</span>
+                        <h4 class="font-bold text-rose-950 text-sm mb-1">Emerging</h4>
+                        <p class="text-xs text-rose-900 leading-relaxed">
+                            PID terpasang namun hanya dipakai sebagai pengganti layar proyektor biasa. Fitur interaktif belum dimaksimalkan, LMS PASTI belum aktif rutin.
+                        </p>
+                    </div>
+
+                    <div class="border border-amber-200 bg-amber-50/50 p-4 rounded-lg">
+                        <span class="inline-block px-2 py-0.5 bg-amber-700 text-white font-bold text-xs rounded mb-2">Level 2: Cakap (46-70%)</span>
+                        <h4 class="font-bold text-amber-950 text-sm mb-1">Developing</h4>
+                        <p class="text-xs text-amber-900 leading-relaxed">
+                            Perangkat dirawat sesuai SOP. Guru memanfaatkan anotasi, *screen share*, dan *split screen*. Akun LMS PASTI aktif dan menyelesaikan modul dasar.
+                        </p>
+                    </div>
+
+                    <div class="border border-sky-200 bg-sky-50/50 p-4 rounded-lg">
+                        <span class="inline-block px-2 py-0.5 bg-sky-700 text-white font-bold text-xs rounded mb-2">Level 3: Mahir (71-85%)</span>
+                        <h4 class="font-bold text-sky-950 text-sm mb-1">Advancing</h4>
+                        <p class="text-xs text-sky-900 leading-relaxed">
+                            Pembelajaran berbasis TPACK berjalan rutin. Guru memproduksi media berbasis AI (Canva/Video AI) dan mengintegrasikan perawatan/keamanan siber berkala.
+                        </p>
+                    </div>
+
+                    <div class="border border-emerald-200 bg-emerald-50/50 p-4 rounded-lg">
+                        <span class="inline-block px-2 py-0.5 bg-emerald-700 text-white font-bold text-xs rounded mb-2">Level 4: Inovatif (86-100%)</span>
+                        <h4 class="font-bold text-emerald-950 text-sm mb-1">Leading</h4>
+                        <p class="text-xs text-emerald-900 leading-relaxed">
+                            Sekolah menjadi *Hub* Pengimbasan (*Cascade Training*). Tercipta ekosistem digital mandiri, inovasi media AI unggulan, dan keberlanjutan program 100%.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: CATATAN KUALITATIF & RTL -->
+        <section id="tab-laporan" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-5 space-y-4 page-break-inside-avoid">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-200 pb-3">
+                    <h3 class="text-sm font-bold text-stone-800 uppercase tracking-wider flex items-center space-x-2">
+                        <span>✏️</span> <span>Catatan Kualitatif & Rekomendasi Asesor</span>
+                    </h3>
+                    <button onclick="generateAutoRTL()" class="no-print bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 transition shadow">
+                        <span>🤖</span> <span>Generate Draft Rekomendasi Otomatis</span>
+                    </button>
+                </div>
+
+                <div>
+                    <label for="catatan-praktik-baik" class="block text-xs font-bold text-stone-700 mb-1">1. Praktik Baik / Inovasi Unggulan yang Ditemukan Lapangan:</label>
+                    <textarea id="catatan-praktik-baik" oninput="saveIdentData()" rows="3" placeholder="Contoh: Guru mata pelajaran IPA aktif membuat video interaktif berbasis AI dan telah melakukan sharing session..." class="w-full border border-stone-300 rounded-md p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+                </div>
+
+                <div>
+                    <label for="catatan-perbaikan" class="block text-xs font-bold text-stone-700 mb-1">2. Area Prioritas Perbaikan (Akar Masalah Teknis / Pedagogis):</label>
+                    <textarea id="catatan-perbaikan" oninput="saveIdentData()" rows="3" placeholder="Contoh: Jaringan Wi-Fi di area kelas belum stabil untuk koneksi multi-device bersamaan..." class="w-full border border-stone-300 rounded-md p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+                </div>
+
+                <div>
+                    <label for="catatan-rtl" class="block text-xs font-bold text-stone-700 mb-1">3. Rekomendasi Rencana Tindak Lanjut (RTL) Asesor:</label>
+                    <textarea id="catatan-rtl" oninput="saveIdentData()" rows="4" placeholder="Klik tombol 'Generate Draft Rekomendasi Otomatis' di atas atau ketik manual rekomendasi RTL di sini..." class="w-full border border-stone-300 rounded-md p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+                </div>
+            </div>
+
+            <!-- LEMBAR TANDA TANGAN -->
+            <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 page-break-inside-avoid">
+                <h4 class="text-xs font-bold text-stone-500 uppercase tracking-wider mb-6 text-center">Lembar Pengesahan & Tanda Tangan Hasil Evaluasi</h4>
+                
+                <div class="grid grid-cols-2 gap-8 text-center text-xs">
+                    <div>
+                        <p class="text-stone-600 mb-1">Mengetahui,</p>
+                        <p class="font-bold text-stone-900">Kepala Sekolah</p>
+                        <div class="h-20 flex items-end justify-center">
+                            <span class="border-b border-stone-400 w-48 block font-bold text-stone-800" id="sig-kepsek-name">( __________________________ )</span>
+                        </div>
+                        <p class="text-stone-500 mt-1">NIP. ________________________</p>
+                    </div>
+
+                    <div>
+                        <p class="text-stone-600 mb-1" id="sig-date-text">Kab. Garut, ____ ________ 2026</p>
+                        <p class="font-bold text-stone-900">Petugas / Tim Asesor</p>
+                        <div class="h-20 flex items-end justify-center">
+                            <span class="border-b border-stone-400 w-48 block font-bold text-stone-800" id="sig-asesor-name">( __________________________ )</span>
+                        </div>
+                        <p class="text-stone-500 mt-1">NIP/NUPTK. ___________________</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-stone-900 text-stone-400 text-xs py-5 px-4 sm:px-6 lg:px-8 border-t border-stone-800 mt-10 no-print">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div>
+                <span class="font-bold text-stone-200">Direktorat Sekolah Menengah Pertama</span> — Kementerian Pendidikan Dasar dan Menengah © 2026
+            </div>
+            <div class="text-stone-400 font-semibold flex items-center space-x-2">
+                <span>Pengembang Aplikasi:</span>
+                <span class="bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2 py-0.5 rounded font-extrabold tracking-wider">IFS</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- PRINT & PAGE CONFIGURATION MODAL -->
+    <div id="print-modal" class="fixed inset-0 bg-stone-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl shadow-2xl border border-stone-200 max-w-md w-full p-6 space-y-5">
+            <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+                <h3 class="text-base font-extrabold text-stone-900 flex items-center space-x-2">
+                    <span>🖨️</span> <span>Pengaturan Cetak / Ekspor PDF</span>
+                </h3>
+                <button onclick="closePrintModal()" class="text-stone-400 hover:text-stone-700 text-lg font-bold">&times;</button>
+            </div>
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-stone-700 mb-1">Cakupan Dokumen Laporan:</label>
+                    <div class="space-y-2 bg-stone-50 p-2.5 rounded-lg border border-stone-200">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="print-scope" value="full" checked class="text-amber-600 focus:ring-amber-500">
+                            <span class="font-bold text-stone-800">Laporan Lengkap (Semua Tab / Seluruh Rubrik Detail)</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="print-scope" value="summary" class="text-amber-600 focus:ring-amber-500">
+                            <span class="font-bold text-stone-800">Ringkasan Eksekutif (Identitas, Grafik, & RTL Saja)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-stone-700 mb-1">Pilih Layout Orientasi Kertas:</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="setPrintOrientation('portrait')" id="btn-orient-portrait" class="p-3 border-2 border-amber-500 bg-amber-50 text-amber-900 rounded-lg font-bold flex flex-col items-center justify-center space-y-1">
+                            <span class="text-xl">📄</span>
+                            <span>Portrait (A4/F4)</span>
+                        </button>
+                        <button onclick="setPrintOrientation('landscape')" id="btn-orient-landscape" class="p-3 border-2 border-stone-200 hover:border-stone-400 text-stone-700 rounded-lg font-bold flex flex-col items-center justify-center space-y-1">
+                            <span class="text-xl rotate-90 inline-block">📄</span>
+                            <span>Landscape (A4/F4)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="select-paper-size" class="block font-bold text-stone-700 mb-1">Ukuran Kertas Standard:</label>
+                    <select id="select-paper-size" onchange="updatePaperSize()" class="w-full border border-stone-300 rounded-lg p-2 font-semibold text-stone-800">
+                        <option value="a4">Standard A4 (210 x 297 mm)</option>
+                        <option value="f4">Standard F4 / Folio (215 x 330 mm)</option>
+                    </select>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-amber-900 text-[11px] leading-relaxed">
+                    💡 <strong>Tips Cetak Presisi:</strong> Di jendela dialog cetak browser, aktifkan opsi <em>"Background Graphics"</em> agar warna lencana dan tabel muncul sempurna.
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2 pt-2 border-t border-stone-200">
+                <button onclick="closePrintModal()" class="w-1/2 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold rounded-lg transition">
+                    Batal
+                </button>
+                <button onclick="executePrint()" class="w-1/2 py-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold rounded-lg shadow transition flex items-center justify-center space-x-1">
+                    <span>🖨️</span> <span>Proses Cetak</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // DATA INSTRUMEN ASSESSMENT DIMENSI & RUBRIK
+        const dimensionsData = [
+            {
+                id: 'dim1',
+                code: 'D1',
+                title: 'Dimensi I: Tata Kelola BMN, Administrasi, & Aset',
+                subtitle: 'Fokus: Legalitas BAST/BAPP, pencatatan inventaris, pelabelan, dan kelengkapan fisik sarpras.',
+                maxScore: 12,
+                indicators: [
+                    {
+                        id: 'ind_1_1',
+                        code: '1.1',
+                        title: 'Kelengkapan Dokumen Legalitas BMN',
+                        desc: 'Kelengkapan BAST, BAPP, dan registrasi aset BMN untuk PID Hisense 75WM61FE, laptop, & Starlink.',
+                        criteria: [
+                            'Dokumen legalitas tidak ada / belum dicatat dalam BMN.',
+                            'Hanya ada BAST, registrasi BMN belum lengkap.',
+                            'Dokumen BAST, BAPP & BMN lengkap dan terverifikasi.',
+                            'Seluruh dokumen lengkap, terdigitalisasi & dapat diakses cepat.'
+                        ]
+                    },
+                    {
+                        id: 'ind_1_2',
+                        code: '1.2',
+                        title: 'Pencatatan & Pelabelan Fisik Aset',
+                        desc: 'Penempelan stiker label BMN pada unit PID, bracket, stylus pen, dan kabel pendukung.',
+                        criteria: [
+                            'Belum ditempeli label BMN dan belum ada kode inventaris.',
+                            'Unit PID ditempeli label, namun aksesori belum terdaftar.',
+                            'PID dan seluruh aksesori utama ditempeli label BMN resmi.',
+                            'Label BMN rapi dilengkapi kode QR sistem inventaris digital.'
+                        ]
+                    },
+                    {
+                        id: 'ind_1_3',
+                        code: '1.3',
+                        title: 'Kelengkapan Fisik & Aksesori Bawaan',
+                        desc: 'Keberadaan dan kondisi fisik Stylus Pen (2 unit), Kabel HDMI/Touch, Remote Control.',
+                        criteria: [
+                            'Aksesori hilang atau rusak >50%.',
+                            'Aksesori lengkap namun disimpan terpisah tanpa SOP.',
+                            'Seluruh aksesori lengkap, berfungsi normal, dan tersimpan aman.',
+                            'Aksesori lengkap + tersedia cadangan operasional (backup kit).'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'dim2',
+                code: 'D2',
+                title: 'Dimensi II: Perawatan, Pemeliharaan, & Keamanan Terpadu',
+                subtitle: 'Fokus: Kesiapan fisik ruangan, proteksi siber, SOP pemeliharaan, & manajemen troubleshooting.',
+                maxScore: 16,
+                indicators: [
+                    {
+                        id: 'ind_2_1',
+                        code: '2.1',
+                        title: 'Keamanan Fisik Ruangan & kelistrikan',
+                        desc: 'Pengamanan ruangan (tralis/kunci), perlindungan sinar matahari/kelembapan, & kestabilan daya (UPS).',
+                        criteria: [
+                            'PID dipasang di ruang terbuka tanpa kuncian/UPS.',
+                            'Ruangan terkunci namun kelistrikan belum stabil.',
+                            'Ruangan aman ber-tralis, daya listrik stabil, terlindung matahari.',
+                            'Ruangan memiliki standar pengamanan ekstra + UPS dedicated.'
+                        ]
+                    },
+                    {
+                        id: 'ind_2_2',
+                        code: '2.2',
+                        title: 'Penerapan SOP Perawatan Berkala',
+                        desc: 'Pembersihan layar microfiber non-alkohol, clearing cache harian, & kalibrasi tahunan.',
+                        criteria: [
+                            'Tidak ada SOP dan pemeliharaan tidak pernah dilakukan.',
+                            'Pemeliharaan dilakukan hanya jika terjadi kendala.',
+                            'Terbukti ada logbook pemeliharaan rutin harian & bulanan.',
+                            'SOP pemeliharaan berjalan otomatis & terdata di logbook digital.'
+                        ]
+                    },
+                    {
+                        id: 'ind_2_3',
+                        code: '2.3',
+                        title: 'Troubleshooting & Layanan Purna Jual',
+                        desc: 'Pemahaman penanganan kendala mandiri dan koordinasi klaim garansi resmi Hisense (3 tahun).',
+                        criteria: [
+                            'Pengelola tidak tahu cara mengatasi kendala minor.',
+                            'Dapat melakukan restart mandiri, namun kontak garansi tidak tahu.',
+                            'Memahami troubleshooting dasar & menyimpan kontak garansi Hisense.',
+                            'Tim IT sekolah mandiri dalam diagnosis & memiliki alur garansi cepat.'
+                        ]
+                    },
+                    {
+                        id: 'ind_2_4',
+                        code: '2.4',
+                        title: 'Keamanan Teknis & Siber (Android 13)',
+                        desc: 'Manajemen kata sandi PID, pembatasan instalasi APK berbahaya, & update firmware.',
+                        criteria: [
+                            'PID tanpa kata sandi, siapa saja bisa install aplikasi bebas.',
+                            'PID diberi sandi, namun firmware belum pernah diupdate.',
+                            'Sandi dikelola admin IT, pembatasan situs & firmware diperbarui.',
+                            'Sistem keamanan siber ketat, enkripsi akun, & auto-update OS.'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'dim3',
+                code: 'D3',
+                title: 'Dimensi III: Integrasi Pedagogi TPACK & Pemanfaatan Fitur PID',
+                subtitle: 'Fokus: Penguasaan fitur interaktif PID (anotasi, split screen) & integrasi modul ajar.',
+                maxScore: 12,
+                indicators: [
+                    {
+                        id: 'ind_3_1',
+                        code: '3.1',
+                        title: 'Penguasaan Fitur Interaktif Layar',
+                        desc: 'Penggunaan fitur Tap 5 Jari, Sidebar Annotation, Screenshot, & Split Screen saat KBM.',
+                        criteria: [
+                            'PID hanya digunakan sebagai tayangan slide statis.',
+                            'Guru hanya menggunakan fitur coret-coret dasar (anotasi).',
+                            'Guru terampil memanfaatkan Split Screen & Screen Capture interaktif.',
+                            'Fitur PID dimaksimalkan untuk pembelajaran kolaboratif aktif.'
+                        ]
+                    },
+                    {
+                        id: 'ind_3_2',
+                        code: '3.2',
+                        title: 'Kolaborasi Multi-Device (Screen Share)',
+                        desc: 'Penghubungan laptop/HP siswa ke layar PID melalui USB Touch / aplikasi Screen Share.',
+                        criteria: [
+                            'Tidak pernah menghubungkan perangkat lain ke PID.',
+                            'Hanya laptop guru yang terhubung via kabel HDMI biasa.',
+                            'Guru & siswa terampil menggunakan Wireless Screen Share multi-device.',
+                            'Interaksi 2 arah via Touch Return berjalan rutin dalam pembelajaran.'
+                        ]
+                    },
+                    {
+                        id: 'ind_3_3',
+                        code: '3.3',
+                        title: 'Integrasi Kerangka TPACK dalam RPP',
+                        desc: 'Modul Ajar menyatukan pemahaman materi, pendekatan pedagogi aktif, & teknologi PID.',
+                        criteria: [
+                            'RPP belum mencantumkan pemanfaatan PID.',
+                            'RPP mencantumkan PID hanya sebagai media pelengkap.',
+                            'RPP terstruktur rapi mengintegrasikan kerangka TPACK interaktif.',
+                            'RPP TPACK menjadi praktik baik yang diimbaskan ke guru lain.'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'dim4',
+                code: 'D4',
+                title: 'Dimensi IV: Inovasi Kreasi Media Pembelajaran Berbasis AI',
+                subtitle: 'Fokus: Produksi konten digital kreatif (Canva/Video AI) & prompting AI oleh guru.',
+                maxScore: 12,
+                indicators: [
+                    {
+                        id: 'ind_4_1',
+                        code: '4.1',
+                        title: 'Prompting & Penyusunan Narasi AI',
+                        desc: 'Kemampuan guru merancang prompt AI untuk menghasilkan teks, gambar, & elemen visual.',
+                        criteria: [
+                            'Guru belum pernah memanfaatkan tools AI pembelajaran.',
+                            'Guru mencoba AI sebatas pencarian teks sederhana.',
+                            'Guru mampu menyusun prompt terstruktur untuk media KBM.',
+                            'Guru terampil mengkombinasikan berbagai prompt AI secara presisi.'
+                        ]
+                    },
+                    {
+                        id: 'ind_4_2',
+                        code: '4.2',
+                        title: 'Produksi Video Audio-Visual AI',
+                        desc: 'Produksi video pembelajaran AI (Canva/CapCut/AI Generator) yang ditayangkan di PID.',
+                        criteria: [
+                            'Belum ada media buatan guru sendiri berbasis AI.',
+                            'Guru menggunakan media AI karya orang lain dari internet.',
+                            'Guru mandiri membuat video pembelajaran AI sesuai materi.',
+                            'Guru memproduksi konten AI interaktif berkualitas tinggi secara rutin.'
+                        ]
+                    },
+                    {
+                        id: 'ind_4_3',
+                        code: '4.3',
+                        title: 'Repositori & Bank Materi Digital',
+                        desc: 'Keberadaan drive/folder bersama tempat menyimpan karya media AI antar pendidik.',
+                        criteria: [
+                            'Karya media guru tersimpan terpisah di laptop pribadi.',
+                            'Ada folder bersama namun belum terorganisir.',
+                            'Sekolah memiliki Repositori Digital karya media guru yang tertata.',
+                            'Repositori publik sekolah dapat diakses oleh sekolah imbas/umum.'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'dim5',
+                code: 'D5',
+                title: 'Dimensi V: Optimalisasi Platform LMS PASTI',
+                subtitle: 'Fokus: Keaktifan akun NPSN/guru, ketuntasan course LMS, & kelulusan sertifikasi.',
+                maxScore: 12,
+                indicators: [
+                    {
+                        id: 'ind_5_1',
+                        code: '5.1',
+                        title: 'Aktivasi Akun NPSN & Profil Guru',
+                        desc: 'Seluruh akun guru terdaftar & profil terisi valid di platform LMS PASTI Kemendikdasmen.',
+                        criteria: [
+                            'Akun sekolah/guru belum diaktifkan (<25%).',
+                            'Akun aktif 50%, profil sebagian belum diselesaikan.',
+                            'Seluruh guru (100%) memiliki akun aktif dengan profil lengkap.',
+                            'Akun aktif 100% dan terintegrasi dengan pemantauan dinas.'
+                        ]
+                    },
+                    {
+                        id: 'ind_5_2',
+                        code: '5.2',
+                        title: 'Ketuntasan Modul & Sertifikasi LMS',
+                        desc: 'Persentase guru yang lulus Pre/Post-Test & mengunduh sertifikat di LMS PASTI.',
+                        criteria: [
+                            'Belum ada guru yang menuntaskan modul LMS (<25%).',
+                            'Sebanyak 25%-60% guru menuntaskan modul LMS.',
+                            'Sebanyak >75% guru telah menuntaskan modul & bersertifikat.',
+                            '100% guru lulus seluruh modul LMS PASTI dengan nilai baik.'
+                        ]
+                    },
+                    {
+                        id: 'ind_5_3',
+                        code: '5.3',
+                        title: 'Pemanfaatan KBM Asinkron Digital',
+                        desc: 'Penggunaan LMS PASTI untuk pembagian tugas, materi, & evaluasi peserta didik.',
+                        criteria: [
+                            'LMS hanya dipakai saat bimbingan teknis saja.',
+                            'LMS digunakan sesekali untuk pembagian materi.',
+                            'LMS dimanfaatkan rutin dalam pembelajaran blended learning.',
+                            'Ekosistem LMS menjadi bagian utama dari budaya belajar sekolah.'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'dim6',
+                code: 'D6',
+                title: 'Dimensi VI: Pengimbasan & Keberlanjutan Ekosistem (Cascade Training)',
+                subtitle: 'Fokus: Pelaksanaan RTL pengimbasan, Komunitas Belajar (Kombel), & komitmen anggaran BOS.',
+                maxScore: 12,
+                indicators: [
+                    {
+                        id: 'ind_6_1',
+                        code: '6.1',
+                        title: 'Pelaksanaan RTL Pengimbasan (Cascade)',
+                        desc: 'Alumni Bimtek melaksanakan pengimbasan kepada guru internal maupun sekolah imbas.',
+                        criteria: [
+                            'Belum ada kegiatan pengimbasan pasca Bimtek.',
+                            'Pengimbasan dilakukan secara informal tanpa laporan.',
+                            'Terlaksana pengimbasan terstruktur dengan bukti daftar hadir & foto.',
+                            'Sekolah menjadi Hub Pengimbasan tingkat kabupaten/wilayah.'
+                        ]
+                    },
+                    {
+                        id: 'ind_6_2',
+                        code: '6.2',
+                        title: 'Penguatan Komunitas Belajar (Kombel)',
+                        desc: 'PID dan digitalisasi menjadi topik rutin dalam agenda diskusi Kombel / MGMP sekolah.',
+                        criteria: [
+                            'Kombel sekolah belum memanfaatkan topik digitalisasi PID.',
+                            'Topik PID dibahas sesekali di Kombel.',
+                            'Kombel sekolah rutin mengadakan pemutakhiran skill PID/AI.',
+                            'Kombel aktif menghasilkan produk inovasi bersama secara berkala.'
+                        ]
+                    },
+                    {
+                        id: 'ind_6_3',
+                        code: '6.3',
+                        title: 'Komitmen Kebijakan & Alokasi BOS',
+                        desc: 'SK Tim Pengelola Digitalisasi, SOP sekolah, & alokasi dana pemeliharaan/internet.',
+                        criteria: [
+                            'Belum ada SK Pengelola dan alokasi anggaran BOS.',
+                            'Ada SK Pengelola namun belum ada alokasi anggaran khusus.',
+                            'SK Tim Pengelola aktif & ada alokasi BOS untuk perawatan/wifi.',
+                            'Kebijakan sekolah komprehensif mendukung keberlanjutan 100%.'
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // GLOBAL APP STATE
+        let currentScores = {};
+        let radarChartInstance = null;
+        let barChartInstance = null;
+
+        // TOAST NOTIFICATION HELPER
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if(!container) return;
+
+            const toast = document.createElement('div');
+            let bgClass = 'bg-stone-900 text-white border-amber-500';
+            let icon = 'ℹ️';
+
+            if(type === 'success') {
+                bgClass = 'bg-emerald-900 text-emerald-100 border-emerald-500';
+                icon = '✅';
+            } else if(type === 'warning') {
+                bgClass = 'bg-amber-900 text-amber-100 border-amber-500';
+                icon = '⚠️';
+            } else if(type === 'error') {
+                bgClass = 'bg-rose-900 text-rose-100 border-rose-500';
+                icon = '❌';
+            }
+
+            toast.className = `flex items-center space-x-2 px-4 py-3 rounded-xl border shadow-xl text-xs font-semibold transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto ${bgClass}`;
+            toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            initScores();
+            loadLocalStorageData();
+            renderDimensionsTableForm();
+            updateCalculations();
+            initCharts();
+            
+            if(!document.getElementById('ident-tanggal').value) {
+                document.getElementById('ident-tanggal').value = new Date().toISOString().split('T')[0];
+            }
+            saveIdentData();
+        });
+
+        function initScores() {
+            dimensionsData.forEach(dim => {
+                dim.indicators.forEach(ind => {
+                    if (!currentScores[ind.id]) {
+                        currentScores[ind.id] = 1;
+                    }
+                });
+            });
+        }
+
+        // TAB SWITCHING LOGIC
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-amber-600', 'text-amber-700');
+                btn.classList.add('border-transparent', 'text-stone-600');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('border-transparent', 'text-stone-600');
+                activeBtn.classList.add('border-amber-600', 'text-amber-700');
+            }
+
+            if(tabId === 'tab-dashboard') {
+                setTimeout(() => {
+                    if (radarChartInstance && barChartInstance) {
+                        radarChartInstance.resize();
+                        barChartInstance.resize();
+                    }
+                    updateCharts();
+                }, 100);
+            }
+        }
+
+        // RENDER ASSESSMENT FORM IN TABLE LAYOUT
+        function renderDimensionsTableForm() {
+            const container = document.getElementById('dimensions-container');
+            container.innerHTML = '';
+
+            dimensionsData.forEach((dim) => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden page-break-inside-avoid";
+
+                let rowsHTML = '';
+                dim.indicators.forEach(ind => {
+                    const currentVal = currentScores[ind.id] || 1;
+
+                    let optionsRadioHTML = '';
+                    for (let score = 1; score <= 4; score++) {
+                        const isChecked = currentVal === score ? 'checked' : '';
+                        const activeBg = currentVal === score ? 'bg-amber-500 text-stone-950 font-black border-amber-600 shadow' : 'bg-white hover:bg-stone-100 text-stone-700 border-stone-300';
+                        const radioId = `radio_${ind.id}_${score}`;
+                        optionsRadioHTML += `
+                            <label for="${radioId}" class="inline-flex items-center space-x-1 cursor-pointer border rounded-md px-2.5 py-1 text-xs transition shadow-sm ${activeBg}">
+                                <input type="radio" id="${radioId}" name="score_${ind.id}" value="${score}" ${isChecked} onchange="onScoreChange('${ind.id}', ${score})" class="hidden">
+                                <span>${score}</span>
+                            </label>
+                        `;
+                    }
+
+                    // Tentukan style warna berdasarkan skor terpilih
+                    let activeScoreColorClass = 'bg-rose-50 border-rose-300 text-rose-950';
+                    let scoreBadgeColor = 'bg-rose-700 text-white';
+                    if (currentVal === 2) {
+                        activeScoreColorClass = 'bg-amber-50 border-amber-300 text-amber-950';
+                        scoreBadgeColor = 'bg-amber-700 text-white';
+                    } else if (currentVal === 3) {
+                        activeScoreColorClass = 'bg-sky-50 border-sky-300 text-sky-950';
+                        scoreBadgeColor = 'bg-sky-700 text-white';
+                    } else if (currentVal === 4) {
+                        activeScoreColorClass = 'bg-emerald-50 border-emerald-300 text-emerald-950';
+                        scoreBadgeColor = 'bg-emerald-700 text-white';
+                    }
+
+                    rowsHTML += `
+                        <tr class="border-b border-stone-200 hover:bg-stone-50/60 transition text-xs">
+                            <td class="p-3 font-bold text-center border-r border-stone-200 text-stone-700 font-mono align-top">${ind.code}</td>
+                            <td class="p-3 border-r border-stone-200 align-top">
+                                <div class="font-bold text-stone-900 text-sm mb-0.5">${ind.title}</div>
+                                <div class="text-stone-500 text-[11px] leading-relaxed mb-2">${ind.desc}</div>
+                                <button type="button" onclick="toggleFullRubric('${ind.id}')" class="text-[11px] font-semibold text-amber-700 hover:text-amber-900 flex items-center space-x-1 no-print">
+                                    <span>👁️</span> <span id="toggle_text_${ind.id}">Lihat Semua Rubrik (1-4)</span>
+                                </button>
+                            </td>
+                            <td class="p-3 border-r border-stone-200 align-top">
+                                <!-- DISPLAY RUBRIK DENGAN PILIHAN AKTIF -->
+                                <div id="active_rubric_box_${ind.id}" class="p-2.5 rounded-lg border text-xs leading-relaxed transition-all ${activeScoreColorClass}">
+                                    <div class="flex items-center space-x-1.5 mb-1">
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${scoreBadgeColor}">Kriteria Skor ${currentVal}</span>
+                                        <span class="text-[11px] font-bold text-stone-700">(Terpilih)</span>
+                                    </div>
+                                    <div class="font-medium text-stone-800">${ind.criteria[currentVal - 1]}</div>
+                                </div>
+
+                                <!-- HIDDEN FULL RUBRIK LIST (TOGGLEABLE) -->
+                                <div id="full_rubric_box_${ind.id}" class="hidden mt-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px]">
+                                    <div class="p-1.5 rounded border ${currentVal === 1 ? 'bg-rose-50 border-rose-300 font-bold text-rose-950' : 'bg-stone-50 border-stone-200 text-stone-600'}">
+                                        <strong>Skor 1:</strong> ${ind.criteria[0]}
+                                    </div>
+                                    <div class="p-1.5 rounded border ${currentVal === 2 ? 'bg-amber-50 border-amber-300 font-bold text-amber-950' : 'bg-stone-50 border-stone-200 text-stone-600'}">
+                                        <strong>Skor 2:</strong> ${ind.criteria[1]}
+                                    </div>
+                                    <div class="p-1.5 rounded border ${currentVal === 3 ? 'bg-sky-50 border-sky-300 font-bold text-sky-950' : 'bg-stone-50 border-stone-200 text-stone-600'}">
+                                        <strong>Skor 3:</strong> ${ind.criteria[2]}
+                                    </div>
+                                    <div class="p-1.5 rounded border ${currentVal === 4 ? 'bg-emerald-50 border-emerald-300 font-bold text-emerald-950' : 'bg-stone-50 border-stone-200 text-stone-600'}">
+                                        <strong>Skor 4:</strong> ${ind.criteria[3]}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="p-3 text-center align-middle whitespace-nowrap bg-stone-50/50">
+                                <div class="flex items-center justify-center space-x-1 mb-2">
+                                    ${optionsRadioHTML}
+                                </div>
+                                <div class="text-[11px] font-semibold text-stone-500">
+                                    Terpilih: <span id="val_badge_${ind.id}" class="inline-block px-2 py-0.5 bg-stone-900 text-amber-400 font-extrabold rounded">${currentVal}</span>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="bg-stone-900 text-white px-5 py-3.5 flex flex-wrap items-center justify-between gap-2 border-b border-stone-800">
+                        <div>
+                            <h3 class="font-extrabold text-sm sm:text-base text-amber-400">${dim.title}</h3>
+                            <p class="text-xs text-stone-300">${dim.subtitle}</p>
+                        </div>
+                        <div class="bg-stone-800 border border-stone-700 rounded-lg px-3 py-1 text-xs font-bold text-stone-200">
+                            Subtotal: <span id="subtotal_${dim.id}" class="text-amber-400 font-black text-sm">0</span> / ${dim.maxScore}
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[640px]">
+                            <thead>
+                                <tr class="bg-stone-100 text-stone-800 text-xs border-b border-stone-300">
+                                    <th class="p-3 text-center font-bold w-12 border-r border-stone-300">No</th>
+                                    <th class="p-3 font-bold w-1/4 border-r border-stone-300">Indikator Penilaian</th>
+                                    <th class="p-3 font-bold w-1/2 border-r border-stone-300">Kriteria Skor Terpilih</th>
+                                    <th class="p-3 font-bold text-center w-36">Pilihan Skor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // TOGGLE DYNAMIC FULL RUBRIC VIEW
+        function toggleFullRubric(indicatorId) {
+            const box = document.getElementById(`full_rubric_box_${indicatorId}`);
+            const text = document.getElementById(`toggle_text_${indicatorId}`);
+            if (box && text) {
+                if (box.classList.contains('hidden')) {
+                    box.classList.remove('hidden');
+                    text.innerText = 'Sembunyikan Semua Rubrik';
+                } else {
+                    box.classList.add('hidden');
+                    text.innerText = 'Lihat Semua Rubrik (1-4)';
+                }
+            }
+        }
+
+        // SCORE CHANGE HANDLER
+        function onScoreChange(indicatorId, score) {
+            currentScores[indicatorId] = parseInt(score);
+            renderDimensionsTableForm();
+            updateCalculations();
+            saveLocalStorageData();
+        }
+
+        // CALCULATIONS & LEVEL EVALUATION
+        function updateCalculations() {
+            let grandTotal = 0;
+            const maxGrandTotal = 76;
+            let completedIndicators = 0;
+
+            dimensionsData.forEach(dim => {
+                let dimSubtotal = 0;
+                dim.indicators.forEach(ind => {
+                    const sc = currentScores[ind.id] || 1;
+                    dimSubtotal += sc;
+                    if(sc >= 3) completedIndicators++;
+                });
+
+                const subEl = document.getElementById(`subtotal_${dim.id}`);
+                if(subEl) subEl.innerText = dimSubtotal;
+            });
+
+            Object.values(currentScores).forEach(val => grandTotal += val);
+            const percentage = (grandTotal / maxGrandTotal) * 100;
+
+            let levelCode = 'Level 1';
+            let levelName = 'Dasar (Emerging)';
+            let badgeBg = 'bg-rose-500 text-white';
+            let statusColor = 'text-rose-600';
+
+            if (percentage >= 86) {
+                levelCode = 'Level 4';
+                levelName = 'Inovatif & Transformatif (Leading)';
+                badgeBg = 'bg-emerald-500 text-stone-950';
+                statusColor = 'text-emerald-600';
+            } else if (percentage >= 71) {
+                levelCode = 'Level 3';
+                levelName = 'Mahir (Advancing)';
+                badgeBg = 'bg-sky-500 text-stone-950';
+                statusColor = 'text-sky-600';
+            } else if (percentage >= 46) {
+                levelCode = 'Level 2';
+                levelName = 'Cakap (Developing)';
+                badgeBg = 'bg-amber-500 text-stone-950';
+                statusColor = 'text-amber-600';
+            }
+
+            document.getElementById('quick-badge').innerText = levelCode.replace('Level ', 'L');
+            document.getElementById('quick-badge').className = `w-12 h-12 rounded-xl flex items-center justify-center text-xl font-black shadow ${badgeBg}`;
+            document.getElementById('quick-level-name').innerText = levelName;
+            document.getElementById('quick-score-text').innerText = `Skor: ${grandTotal} / ${maxGrandTotal}`;
+            document.getElementById('quick-percent-text').innerText = `${percentage.toFixed(1)}%`;
+
+            document.getElementById('card-total-score').innerText = `${grandTotal} / ${maxGrandTotal}`;
+            document.getElementById('card-percent').innerText = `${percentage.toFixed(1)}%`;
+            document.getElementById('card-percent-status').innerText = levelName;
+            document.getElementById('card-percent-status').className = `text-[11px] font-semibold ${statusColor}`;
+            document.getElementById('card-level-title').innerText = levelCode;
+            document.getElementById('card-level-category').innerText = levelName;
+            document.getElementById('card-completed-count').innerText = `${completedIndicators} / 19`;
+
+            renderSummaryTable();
+            if(radarChartInstance) updateCharts();
+        }
+
+        // RENDER SUMMARY TABLE IN DASHBOARD
+        function renderSummaryTable() {
+            const tbody = document.getElementById('table-summary-body');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            dimensionsData.forEach(dim => {
+                let sub = 0;
+                dim.indicators.forEach(ind => sub += (currentScores[ind.id] || 1));
+                const pct = ((sub / dim.maxScore) * 100).toFixed(1);
+
+                let badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Cukup</span>`;
+                if(pct >= 85) badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Sangat Baik</span>`;
+                else if(pct >= 70) badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-100 text-sky-800">Baik</span>`;
+                else if(pct < 50) badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">Perlu Intervensi</span>`;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-2.5 font-bold text-stone-800">${dim.title}</td>
+                        <td class="p-2.5 text-center">${dim.indicators.length}</td>
+                        <td class="p-2.5 text-center font-bold">${dim.maxScore}</td>
+                        <td class="p-2.5 text-center font-extrabold text-amber-700">${sub}</td>
+                        <td class="p-2.5 text-center font-bold">${pct}%</td>
+                        <td class="p-2.5 text-center">${badge}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // CHART.JS INITIALIZATION WITH TARGET BASELINE DATASET
+        function initCharts() {
+            const radarCtx = document.getElementById('radarChart').getContext('2d');
+            const barCtx = document.getElementById('barChart').getContext('2d');
+
+            const labels = dimensionsData.map(d => d.code);
+            const targetMinScores = dimensionsData.map(d => d.indicators.length * 3);
+
+            radarChartInstance = new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Skor Capaian Real',
+                            data: [0,0,0,0,0,0],
+                            backgroundColor: 'rgba(217, 119, 6, 0.25)',
+                            borderColor: '#d97706',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#78350f'
+                        },
+                        {
+                            label: 'Target Standar Minimal (Skor 3/Indikator)',
+                            data: targetMinScores,
+                            backgroundColor: 'rgba(148, 163, 184, 0.1)',
+                            borderColor: '#94a3b8',
+                            borderWidth: 1.5,
+                            borderDash: [4, 4],
+                            pointRadius: 2,
+                            pointBackgroundColor: '#64748b'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#e2e8f0' },
+                            grid: { color: '#f1f5f9' },
+                            suggestedMin: 0,
+                            suggestedMax: 16
+                        }
+                    }
+                }
+            });
+
+            barChartInstance = new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Skor Real',
+                            data: [0,0,0,0,0,0],
+                            backgroundColor: '#d97706'
+                        },
+                        {
+                            label: 'Skor Maksimum',
+                            data: dimensionsData.map(d => d.maxScore),
+                            backgroundColor: '#e2e8f0'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            updateCharts();
+        }
+
+        function updateCharts() {
+            if(!radarChartInstance || !barChartInstance) return;
+
+            const currentSubtotals = dimensionsData.map(dim => {
+                let sub = 0;
+                dim.indicators.forEach(ind => sub += (currentScores[ind.id] || 1));
+                return sub;
+            });
+
+            radarChartInstance.data.datasets[0].data = currentSubtotals;
+            radarChartInstance.update();
+
+            barChartInstance.data.datasets[0].data = currentSubtotals;
+            barChartInstance.update();
+        }
+
+        // PRESET SIMULATION LOADERS
+        function loadPreset(level) {
+            dimensionsData.forEach(dim => {
+                dim.indicators.forEach(ind => {
+                    if (level === 1) currentScores[ind.id] = 1;
+                    else if (level === 2) currentScores[ind.id] = Math.random() > 0.3 ? 2 : 3;
+                    else if (level === 3) currentScores[ind.id] = Math.random() > 0.2 ? 3 : 4;
+                    else if (level === 4) currentScores[ind.id] = 4;
+                });
+            });
+
+            renderDimensionsTableForm();
+            updateCalculations();
+            saveLocalStorageData();
+            showToast(`Simulasi data Level ${level} berhasil dimuat.`, 'info');
+        }
+
+        function resetScoresConfirm() {
+            if(confirm('Apakah Anda yakin ingin mereset seluruh skor menjadi level dasar (1)?')) {
+                loadPreset(1);
+                showToast('Seluruh skor instrumen telah direset ke nilai awal.', 'warning');
+            }
+        }
+
+        // AUTO-GENERATE RECOMMENDATION / RTL BASED ON LOW SCORES
+        function generateAutoRTL() {
+            let recommendations = [];
+            dimensionsData.forEach(dim => {
+                dim.indicators.forEach(ind => {
+                    const score = currentScores[ind.id] || 1;
+                    if (score <= 2) {
+                        recommendations.push(`• [${ind.code} ${ind.title}]: Masih berada pada skor ${score}. Prioritaskan perbaikan/bimbingan teknis pada area ini.`);
+                    }
+                });
+            });
+
+            const rtlBox = document.getElementById('catatan-rtl');
+            if (recommendations.length > 0) {
+                rtlBox.value = "REKOMENDASI PRIORITAS RENCANA TINDAK LANJUT (RTL):\n" + recommendations.join("\n");
+            } else {
+                rtlBox.value = "REKOMENDASI PRIORITAS RENCANA TINDAK LANJUT (RTL):\nSeluruh indikator telah memenuhi standar capaian baik (Skor 3 / 4). Pertahankan konsistensi, tingkatkan inovasi media AI, serta tingkatkan intensitas pengimbasan (Cascade Training) ke sekolah lain.";
+            }
+            saveIdentData();
+            showToast('Draft rekomendasi RTL berhasil digenerate otomatis!', 'success');
+        }
+
+        // SAVE IDENTITAS & NOTES TO LOCALSTORAGE
+        function saveIdentData() {
+            const payload = {
+                sekolah: document.getElementById('ident-sekolah').value,
+                wilayah: document.getElementById('ident-wilayah').value,
+                kepsek: document.getElementById('ident-kepsek').value,
+                asesor: document.getElementById('ident-asesor').value,
+                tanggal: document.getElementById('ident-tanggal').value,
+                praktikBaik: document.getElementById('catatan-praktik-baik').value,
+                perbaikan: document.getElementById('catatan-perbaikan').value,
+                rtl: document.getElementById('catatan-rtl').value
+            };
+
+            localStorage.setItem('pid_ident_data', JSON.stringify(payload));
+
+            document.getElementById('sig-kepsek-name').innerText = payload.kepsek ? `( ${payload.kepsek} )` : '( __________________________ )';
+            document.getElementById('sig-asesor-name').innerText = payload.asesor ? `( ${payload.asesor} )` : '( __________________________ )';
+            document.getElementById('sig-date-text').innerText = payload.wilayah && payload.tanggal ? `${payload.wilayah.split(',')[0]}, ${payload.tanggal}` : 'Kab. Garut, ____ ________ 2026';
+            document.getElementById('print-date-stamp').innerText = `Tanggal: ${payload.tanggal || '-'}`;
+        }
+
+        function saveLocalStorageData() {
+            localStorage.setItem('pid_scores', JSON.stringify(currentScores));
+            saveIdentData();
+        }
+
+        function loadLocalStorageData() {
+            const savedScores = localStorage.getItem('pid_scores');
+            if(savedScores) {
+                try {
+                    currentScores = JSON.parse(savedScores);
+                } catch(e) {}
+            }
+
+            const savedIdent = localStorage.getItem('pid_ident_data');
+            if(savedIdent) {
+                try {
+                    const data = JSON.parse(savedIdent);
+                    if(data.sekolah) document.getElementById('ident-sekolah').value = data.sekolah;
+                    if(data.wilayah) document.getElementById('ident-wilayah').value = data.wilayah;
+                    if(data.kepsek) document.getElementById('ident-kepsek').value = data.kepsek;
+                    if(data.asesor) document.getElementById('ident-asesor').value = data.asesor;
+                    if(data.tanggal) document.getElementById('ident-tanggal').value = data.tanggal;
+                    if(data.praktikBaik) document.getElementById('catatan-praktik-baik').value = data.praktikBaik;
+                    if(data.perbaikan) document.getElementById('catatan-perbaikan').value = data.perbaikan;
+                    if(data.rtl) document.getElementById('catatan-rtl').value = data.rtl;
+                } catch(e) {}
+            }
+        }
+
+        // EXPORT TO JSON FILE
+        function exportJSON() {
+            const fullData = {
+                identitas: JSON.parse(localStorage.getItem('pid_ident_data') || '{}'),
+                scores: currentScores,
+                exportedAt: new Date().toISOString(),
+                developer: 'IFS'
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullData, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            const fileName = `Asesmen_PID_${(fullData.identitas.sekolah || 'Sekolah').replace(/[^a-z0-9]/gi, '_')}.json`;
+            downloadAnchor.setAttribute("download", fileName);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast('File JSON data asesmen berhasil diunduh.', 'success');
+        }
+
+        // IMPORT FROM JSON FILE WITH IMMEDIATE UI REFRESH
+        function importJSON(event) {
+            const fileReader = new FileReader();
+            fileReader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if(parsed.scores) {
+                        currentScores = parsed.scores;
+                        if(parsed.identitas) {
+                            localStorage.setItem('pid_ident_data', JSON.stringify(parsed.identitas));
+                        }
+                        loadLocalStorageData();
+                        renderDimensionsTableForm();
+                        updateCalculations();
+                        saveIdentData();
+                        showToast('Data instrumen asesmen berhasil dimuat!', 'success');
+                    }
+                } catch(err) {
+                    showToast('Format file JSON tidak valid.', 'error');
+                }
+            };
+            fileReader.readAsText(event.target.files[0]);
+        }
+
+        // EXPORT TO WORD (.DOC) - HIGHLY COMPATIBLE RTF & CLEAN DOCUMENT SPECIFICATION
+        function exportWordDoc() {
+            const sekolah = document.getElementById('ident-sekolah').value || '-';
+            const wilayah = document.getElementById('ident-wilayah').value || '-';
+            const kepsek = document.getElementById('ident-kepsek').value || '-';
+            const asesor = document.getElementById('ident-asesor').value || '-';
+            const tanggal = document.getElementById('ident-tanggal').value || '-';
+            const levelName = document.getElementById('quick-level-name').innerText;
+            const scoreText = document.getElementById('quick-score-text').innerText;
+            const percentText = document.getElementById('quick-percent-text').innerText;
+            const praktikBaik = document.getElementById('catatan-praktik-baik').value || '-';
+            const perbaikan = document.getElementById('catatan-perbaikan').value || '-';
+            const rtl = document.getElementById('catatan-rtl').value || '-';
+
+            // Menghasilkan dokumen Word berformat HTML Word Document standar yang kompatibel dengan Word Mobile, iPad, WPS, & Android
+            const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+            <head><meta charset='utf-8'><title>Laporan Asesmen PID</title>
+            <!--[if gte mso 9]>
+            <xml>
+            <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>100</w:Zoom>
+            <w:DoNotOptimizeForBrowser/>
+            </w:WordDocument>
+            </xml>
+            <![endif]-->
+            <style>
+                body { font-family: 'Calibri', 'Arial', sans-serif; font-size: 11pt; line-height: 1.4; color: #1f2937; }
+                h2 { font-size: 14pt; text-align: center; font-weight: bold; color: #111827; margin-bottom: 2px; }
+                .subtitle { font-size: 9pt; text-align: center; color: #4b5563; margin-bottom: 16px; font-weight: bold; }
+                table { width: 100%; border-collapse: collapse; margin-top: 8px; margin-bottom: 16px; }
+                th, td { border: 1px solid #9ca3af; padding: 6px 10px; text-align: left; font-size: 10pt; }
+                th { background-color: #f3f4f6; font-weight: bold; color: #111827; }
+                .section-header { font-size: 11pt; font-weight: bold; background-color: #e5e7eb; padding: 6px 8px; margin-top: 14px; margin-bottom: 6px; border-left: 4px solid #d97706; }
+                .content-box { border: 1px solid #d1d5db; padding: 8px 12px; background-color: #f9fafb; font-size: 10pt; margin-bottom: 10px; border-radius: 4px; }
+            </style>
+            </head><body>`;
+
+            let bodyContent = `
+                <h2>LAPORAN HASIL ASESMEN KEMATANGAN PID & DIGITALISASI</h2>
+                <div class="subtitle">Direktorat Sekolah Menengah Pertama — Kementerian Pendidikan Dasar dan Menengah (TA 2026)</div>
+
+                <div class="section-header">I. IDENTITAS SATUAN PENDIDIKAN & ASESOR</div>
+                <table>
+                    <tr><td width="35%"><strong>Nama Sekolah / NPSN</strong></td><td>${sekolah}</td></tr>
+                    <tr><td><strong>Kabupaten/Kota & Provinsi</strong></td><td>${wilayah}</td></tr>
+                    <tr><td><strong>Nama Kepala Sekolah</strong></td><td>${kepsek}</td></tr>
+                    <tr><td><strong>Nama Tim Asesor</strong></td><td>${asesor}</td></tr>
+                    <tr><td><strong>Tanggal Asesmen</strong></td><td>${tanggal}</td></tr>
+                    <tr><td><strong>Model Perangkat PID</strong></td><td>Hisense 75WM61FE + LMS PASTI</td></tr>
+                </table>
+
+                <div class="section-header">II. RINGKASAN CAPAIAN KEMATANGAN</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;">Status Kematangan</th>
+                            <th style="text-align:center;">Total Skor Perolehan</th>
+                            <th style="text-align:center;">Persentase Capaian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center;"><strong>${levelName}</strong></td>
+                            <td style="text-align:center;"><strong>${scoreText}</strong></td>
+                            <td style="text-align:center;"><strong>${percentText}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="section-header">III. SKOR PER DIMENSI PENILAIAN</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dimensi Evaluasi</th>
+                            <th style="text-align:center;">Maksimal</th>
+                            <th style="text-align:center;">Capaian Real</th>
+                            <th style="text-align:center;">Persentase</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            dimensionsData.forEach(dim => {
+                let sub = 0;
+                dim.indicators.forEach(ind => sub += (currentScores[ind.id] || 1));
+                const pct = ((sub / dim.maxScore) * 100).toFixed(1);
+                bodyContent += `
+                    <tr>
+                        <td>${dim.title}</td>
+                        <td style="text-align:center;">${dim.maxScore}</td>
+                        <td style="text-align:center;"><strong>${sub}</strong></td>
+                        <td style="text-align:center;">${pct}%</td>
+                    </tr>`;
+            });
+
+            bodyContent += `
+                    </tbody>
+                </table>
+
+                <div class="section-header">IV. CATATAN KUALITATIF & REKOMENDASI RTL</div>
+                <p><strong>1. Praktik Baik / Inovasi Unggulan:</strong></p>
+                <div class="content-box">${praktikBaik.replace(/\n/g, '<br/>')}</div>
+
+                <p><strong>2. Area Prioritas Perbaikan:</strong></p>
+                <div class="content-box">${perbaikan.replace(/\n/g, '<br/>')}</div>
+
+                <p><strong>3. Rekomendasi Rencana Tindak Lanjut (RTL) Asesor:</strong></p>
+                <div class="content-box">${rtl.replace(/\n/g, '<br/>')}</div>
+
+                <br><br>
+                <table style="border:none; margin-top:20px;">
+                    <tr style="border:none;">
+                        <td style="border:none; text-align:center;" width="50%">
+                            Mengetahui,<br><strong>Kepala Sekolah</strong><br><br><br><br><br>
+                            <u><strong>( ${kepsek} )</strong></u><br>NIP. __________________________
+                        </td>
+                        <td style="border:none; text-align:center;" width="50%">
+                            ${wilayah.split(',')[0]}, ${tanggal}<br><strong>Petugas / Tim Asesor</strong><br><br><br><br><br>
+                            <u><strong>( ${asesor} )</strong></u><br>NIP/NUPTK. __________________________
+                        </td>
+                    </tr>
+                </table>
+            </body></html>`;
+
+            const fullHtml = header + bodyContent;
+            
+            // Tambahkan BOM (Byte Order Mark) UTF-8 agar tablet membaca karakter khusus dengan sempurna
+            const blob = new Blob(['\ufeff', fullHtml], { type: 'application/msword;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Laporan_Asesmen_PID_${sekolah.replace(/[^a-z0-9]/gi, '_')}.doc`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Laporan Word (.doc) berhasil diekspor (Compatible iPad/Tablet).', 'success');
+        }
+
+        // PRINT MODAL & ORIENTATION CONTROLS
+        function triggerPrintModal() {
+            document.getElementById('print-modal').classList.remove('hidden');
+        }
+
+        function closePrintModal() {
+            document.getElementById('print-modal').classList.add('hidden');
+        }
+
+        function setPrintOrientation(mode) {
+            const btnP = document.getElementById('btn-orient-portrait');
+            const btnL = document.getElementById('btn-orient-landscape');
+            const sizeSelect = document.getElementById('select-paper-size').value;
+
+            if(mode === 'portrait') {
+                btnP.className = "p-3 border-2 border-amber-500 bg-amber-50 text-amber-900 rounded-lg font-bold flex flex-col items-center justify-center space-y-1";
+                btnL.className = "p-3 border-2 border-stone-200 hover:border-stone-400 text-stone-700 rounded-lg font-bold flex flex-col items-center justify-center space-y-1";
+                document.body.className = document.body.className.replace(/print-(portrait|landscape|f4-portrait|f4-landscape)/g, '');
+                document.body.classList.add(sizeSelect === 'f4' ? 'print-f4-portrait' : 'print-portrait');
+            } else {
+                btnL.className = "p-3 border-2 border-amber-500 bg-amber-50 text-amber-900 rounded-lg font-bold flex flex-col items-center justify-center space-y-1";
+                btnP.className = "p-3 border-2 border-stone-200 hover:border-stone-400 text-stone-700 rounded-lg font-bold flex flex-col items-center justify-center space-y-1";
+                document.body.className = document.body.className.replace(/print-(portrait|landscape|f4-portrait|f4-landscape)/g, '');
+                document.body.classList.add(sizeSelect === 'f4' ? 'print-f4-landscape' : 'print-landscape');
+            }
+        }
+
+        function updatePaperSize() {
+            const isLandscape = document.getElementById('btn-orient-landscape').classList.contains('border-amber-500');
+            setPrintOrientation(isLandscape ? 'landscape' : 'portrait');
+        }
+
+        // EXECUTE PRINT WITH SCOPE SELECTION AND CANVAS RESIZE FIX
+        function executePrint() {
+            closePrintModal();
+
+            const scopeRadio = document.querySelector('input[name="print-scope"]:checked');
+            const isSummaryOnly = scopeRadio && scopeRadio.value === 'summary';
+
+            document.body.classList.remove('print-mode-summary');
+
+            if(isSummaryOnly) {
+                document.body.classList.add('print-mode-summary');
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+                document.getElementById('tab-dashboard').classList.remove('hidden');
+                document.getElementById('tab-laporan').classList.remove('hidden');
+            } else {
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('hidden'));
+            }
+
+            if (radarChartInstance && barChartInstance) {
+                radarChartInstance.resize();
+                barChartInstance.resize();
+                updateCharts();
+            }
+
+            setTimeout(() => {
+                window.print();
+                document.body.classList.remove('print-mode-summary');
+                switchTab('tab-asesmen');
+            }, 250);
+        }
+    </script>
+</body>
+</html>
